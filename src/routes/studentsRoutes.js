@@ -5,21 +5,21 @@ const {
   findById,
   deleteById,
   logicDeleteById,
-} = require("../services/studentsServices"); 
+} = require("../services/studentsServices");
 const {
   validateById,
   validateBody,
   studentExistent,
-} = require("../middleware/studentsMiddleware"); 
+} = require("../middleware/studentsMiddleware");
 const verifyToken = require("../middleware/authMiddleware"); // Importa el middleware
 
 const router = express.Router();
 
 /**obtener todos */
-router.get("/", verifyToken, async (req, res) => {  // Protege esta ruta
+router.get("/", async (req, res) => { // RUTA SIN verifyToken
   try {
-    const { search = "", currentPage = 1, pageSize = 5 } = req.query; 
-    const students = await findAll(search, currentPage, pageSize); 
+    const { search = "", currentPage = 1, pageSize = 5 } = req.query;
+    const students = await findAll(search, currentPage, pageSize);
     res.json(students);
   } catch (error) {
     res.sendStatus(500);
@@ -27,7 +27,7 @@ router.get("/", verifyToken, async (req, res) => {  // Protege esta ruta
 });
 
 /**obtener por id */
-router.get("/:id", verifyToken, validateById, async (req, res) => {  // Protege esta ruta
+router.get("/:id", validateById, async (req, res) => { // RUTA SIN verifyToken
   try {
     const student = await findById(Number(req.params.id));
 
@@ -45,18 +45,18 @@ router.get("/:id", verifyToken, validateById, async (req, res) => {  // Protege 
 });
 
 /**crear */
-router.post("/", verifyToken, validateBody, studentExistent, async (req, res) => {  // Protege esta ruta
+router.post("/", verifyToken, validateBody, studentExistent, async (req, res) => {
   try {
     const newStudent = await create(req.body);
     res.json(newStudent);
   } catch (error) {
-    console.error("Error al crear estudiante:", error.message); 
-    res.status(500).json({ message: error.message }); 
+    console.error("Error al crear estudiante:", error.message);
+    res.status(500).json({ message: error.message });
   }
 });
 
 /**borrar por id */
-router.delete("/:id", verifyToken, validateById, async (req, res) => {  // Protege esta ruta
+router.delete("/:id", verifyToken, validateById, async (req, res) => {
   try {
     await deleteById(req.params.id);
     res.json("Ok");
@@ -65,7 +65,8 @@ router.delete("/:id", verifyToken, validateById, async (req, res) => {  // Prote
   }
 });
 
-router.put("/:id", verifyToken, validateById, async (req, res) => {  // Protege esta ruta
+/**actualización lógica */
+router.put("/:id", verifyToken, validateById, async (req, res) => {
   try {
     const logicDeletedStudent = await logicDeleteById(req.params.id, req.body);
     res.json(logicDeletedStudent);
