@@ -11,11 +11,12 @@ const {
   validateBody,
   studentExistent,
 } = require("../middleware/studentsMiddleware"); 
+const verifyToken = require("../middleware/authMiddleware"); // Importa el middleware
 
 const router = express.Router();
 
 /**obtener todos */
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {  // Protege esta ruta
   try {
     const { search = "", currentPage = 1, pageSize = 5 } = req.query; 
     const students = await findAll(search, currentPage, pageSize); 
@@ -26,7 +27,7 @@ router.get("/", async (req, res) => {
 });
 
 /**obtener por id */
-router.get("/:id", validateById, async (req, res) => {
+router.get("/:id", verifyToken, validateById, async (req, res) => {  // Protege esta ruta
   try {
     const student = await findById(Number(req.params.id));
 
@@ -43,8 +44,8 @@ router.get("/:id", validateById, async (req, res) => {
   }
 });
 
-/** crear */
-router.post("/", validateBody, studentExistent, async (req, res) => {
+/**crear */
+router.post("/", verifyToken, validateBody, studentExistent, async (req, res) => {  // Protege esta ruta
   try {
     const newStudent = await create(req.body);
     res.json(newStudent);
@@ -54,8 +55,8 @@ router.post("/", validateBody, studentExistent, async (req, res) => {
   }
 });
 
-/**borra por id */
-router.delete("/:id", validateById, async (req, res) => {
+/**borrar por id */
+router.delete("/:id", verifyToken, validateById, async (req, res) => {  // Protege esta ruta
   try {
     await deleteById(req.params.id);
     res.json("Ok");
@@ -64,7 +65,7 @@ router.delete("/:id", validateById, async (req, res) => {
   }
 });
 
-router.put("/:id", validateById, async (req, res) => {
+router.put("/:id", verifyToken, validateById, async (req, res) => {  // Protege esta ruta
   try {
     const logicDeletedStudent = await logicDeleteById(req.params.id, req.body);
     res.json(logicDeletedStudent);
