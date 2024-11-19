@@ -2,8 +2,6 @@ const { Sequelize } = require('sequelize');
 
 let seqInstance = null;
 
-
-
 const createInstance = async () => {
     const instance = new Sequelize(
         'studentsdb', // nombre de base de datos
@@ -14,6 +12,9 @@ const createInstance = async () => {
             dialect: 'mysql',
             pool: {
                 max: 3
+            },
+            define: {
+                // Aquí puedes definir opciones globales si es necesario
             }
         }
     );
@@ -23,7 +24,7 @@ const createInstance = async () => {
         console.log('Connection has been established successfully.');
         return instance;
     } catch (error) {
-        throw new Error('Unable to connecto to database');
+        throw new Error('Unable to connect to database');
     }
 };
 
@@ -36,5 +37,6 @@ const getSeqInstance = async () => {
 };
 
 module.exports = {
-    getSeqInstance
+    getSeqInstance,
+    createInstance // Exporta también createInstance si es necesario
 };

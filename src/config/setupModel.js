@@ -1,10 +1,11 @@
 const { getSeqInstance } = require('./setupDb');
-const { Students } = require('../model/studentsModels'); 
+const { Students } = require('../model/studentsModels');
+const initUserModel = require('../model/usersModel');
 
 const setupModel = async () => {
-    const instanceDb = await getSeqInstance();
-    const students = Students.init(instanceDb); 
-    
+    const sequelize = await getSeqInstance();
+    Students.init(sequelize);  // Usamos el método 'init' en lugar de 'initModel'
+    await initUserModel();
 };
 
 setupModel();

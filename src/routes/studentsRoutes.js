@@ -1,5 +1,4 @@
 const express = require("express");
-
 const {
   findAll,
   create,
@@ -67,7 +66,6 @@ router.delete("/:id", validateById, async (req, res) => {
 
 router.put("/:id", validateById, async (req, res) => {
   try {
-
     const logicDeletedStudent = await logicDeleteById(req.params.id, req.body);
     res.json(logicDeletedStudent);
   } catch (error) {
